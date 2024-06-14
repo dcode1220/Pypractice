@@ -1,5 +1,18 @@
 from netmiko import ConnectHandler
 import shutil
+import aide
+
+try:	
+    aide.submit_statistics(	
+        pid="Axxxxx",    # This should be a valid Project PID	
+        tool_id="666c2d11c8b05dca94f37fc0",	
+        metadata={	
+            "potential_savings": 0.500,    # Hours	
+            "report_savings": True,	
+        },	
+    )	
+except Exception as err:	
+    raise err	
 
 # Define your network device IP address in "sdwan_router_ips" text file.
 sdwan_router_ips= open(r"DEFINE FILE PATH WHERE DEVICE IP ADDRESSES ARE STORED/routers_ip_csh.txt", "r")
