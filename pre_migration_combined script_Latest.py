@@ -2,21 +2,11 @@ from netmiko import ConnectHandler
 import os
 import aide
 
-try:	
-    aide.submit_statistics(	
-        pid="Axxxxx",    # This should be a valid Project PID	
-        tool_id="666c2d11c8b05dca94f37fc0",	
-        metadata={	
-            "potential_savings": 0.500,    # Hours	
-            "report_savings": True,	
-        },	
-    )	
-except Exception as err:	
-    raise err	
+count_var = 0
 
-# Define your network devices IP address in "sdwan_router_ips" text file
+# Define your network devices IP address in "sdwan_Edge_device_ips" text file
 
-sdwan_router_ips= open(r"DEFINE FILE PATH WHERE DEVICE IP ADDRESSES ARE STORED\routers_ip_csh.txt", "r")
+sdwan_router_ips= open(r"DEFINE FILE PATH WHERE DEVICE IP ADDRESSES ARE STORED\Edge_ip_list.txt", "r")
 
 os.mkdir(r"DEFINE PATH WHERE YOU WANT TO CREATE TEMPORARY FOLDER")
 
@@ -34,7 +24,8 @@ for router_ips in sdwan_router_ips:
         'device_type':'cisco_ios',
         'secret':False
     }
-
+    count_var=count_var+1
+    
     router_ips=str(router_ips)
     ssh= ConnectHandler(**device_details)
     
@@ -116,3 +107,14 @@ for router_ips in sdwan_router_ips:
 
 sdwan_router_ips.close()
 
+try:	
+    aide.submit_statistics(	
+        pid=input('Enter your Valid Account PID : '),    # This should be a valid Project PID	
+        tool_id="666c2d11c8b05dca94f37fc0",	
+        metadata={	
+            "potential_savings": count_var*0.2,    # Hours	
+            "report_savings": True,	
+        },	
+    )	
+except Exception as err:	
+    raise err	
