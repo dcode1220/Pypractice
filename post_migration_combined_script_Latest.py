@@ -2,20 +2,10 @@ from netmiko import ConnectHandler
 import shutil
 import aide
 
-try:	
-    aide.submit_statistics(	
-        pid="Axxxxx",    # This should be a valid Project PID	
-        tool_id="666c2d11c8b05dca94f37fc0",	
-        metadata={	
-            "potential_savings": 0.500,    # Hours	
-            "report_savings": True,	
-        },	
-    )	
-except Exception as err:	
-    raise err	
+count_var = 0
 
-# Define your network device IP address in "sdwan_router_ips" text file.
-sdwan_router_ips= open(r"DEFINE FILE PATH WHERE DEVICE IP ADDRESSES ARE STORED/routers_ip_csh.txt", "r")
+# Define your network device IP address in "sdwan_Edge_device_ips" text file.
+sdwan_router_ips= open(r"DEFINE FILE PATH WHERE DEVICE IP ADDRESSES ARE STORED/Edge_device_ip.txt", "r")
 
 #Pre-defined CLIs to fetch desired output
 commands=['show running-config', 'show ip route', 'show ip interface brief']
@@ -30,7 +20,7 @@ for router_ips in sdwan_router_ips:
         'device_type':'cisco_ios',
         'secret':False
     }
-
+    count_var=count_var+1
     router_ips=str(router_ips)
     ssh= ConnectHandler(**device_details)
 
@@ -154,4 +144,14 @@ post_migration_1.close()
 diff_migration_1.close()
 
 shutil.rmtree(r"DEFINE THE PATH OF TEMPORARY FOLDER WHICH WILL HOLD PRE AND POST MIGRATION OUTPUTs")
-
+try:	
+    aide.submit_statistics(	
+        pid=input('Enter Your Valid Account PID :'),    # This should be a valid Project PID	
+        tool_id="666c2d11c8b05dca94f37fc0",	
+        metadata={	
+            "potential_savings": count_var*0.300,    # Hours	
+            "report_savings": True,	
+        },	
+    )	
+except Exception as err:	
+    raise err	
